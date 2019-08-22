@@ -1,11 +1,11 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { EventoService } from '../_services/Evento.service';
 import { Evento } from '../_models/Evento';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalService } from 'ngx-bootstrap';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 // Date picker
 import { defineLocale, BsLocaleService , ptBrLocale } from 'ngx-bootstrap';
-import { TemplateParseError, templateJitUrl } from '@angular/compiler';
 defineLocale('pt-br', ptBrLocale);
 
 @Component({
@@ -25,16 +25,16 @@ export class EventosComponent implements OnInit {
   imagemMargem = 2;
   mostrarImagem = false;
   registerForm: FormGroup;
-  
   // tslint:disable-next-line:variable-name
   _filtroLista = '';
 
   constructor(
     private eventoService: EventoService
     // tslint:disable-next-line:align
-    , private modalService: BsModalService
+    // , private modalService: BsModalService
     , private fb: FormBuilder
     , private localeService: BsLocaleService
+    , private toastr: ToastrService
     ) {
       this.localeService.use('pt-br');
     }
@@ -54,12 +54,12 @@ export class EventosComponent implements OnInit {
     template.show();
   }
 
-  novoEvento(template: any){
+  novoEvento(template: any) {
     this.acao  = 'post';
     this.openModal(template);
   }
 
-  editarEvento(evento: Evento, template: any){
+  editarEvento(evento: Evento, template: any) {
     this.acao = 'put';
     this.openModal(template);
     this.evento = evento;
@@ -123,7 +123,7 @@ export class EventosComponent implements OnInit {
   deletarEvento(evento: Evento) {
     this.eventoService.deleteEvento(this.evento.id).subscribe(
       () => {
-        template.hide();
+        this.toastr.success('Hello world!', 'Toastr fun!');
         this.getEventos();
       }, error => {
         console.log(error);

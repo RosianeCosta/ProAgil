@@ -5,6 +5,8 @@ import { BsDropdownModule, ModalModule, TooltipModule, BsDatepickerModule } from
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { ToastrModule } from 'ngx-toastr';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { EventoService } from './_services/Evento.service';
@@ -31,6 +33,7 @@ import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
       BsDatepickerModule.forRoot(),
       ModalModule.forRoot(),
       TooltipModule.forRoot(),
+      ToastrModule.forRoot(),
       ReactiveFormsModule,
       BrowserAnimationsModule
    ],

@@ -19,12 +19,13 @@ export class EventosComponent implements OnInit {
   eventosFiltrados: Evento[];
   eventos: Evento[];
   evento: Evento;
+  acao: string;
 
   imagemLargura = 50;
   imagemMargem = 2;
   mostrarImagem = false;
   registerForm: FormGroup;
-
+  
   // tslint:disable-next-line:variable-name
   _filtroLista = '';
 
@@ -46,12 +47,24 @@ export class EventosComponent implements OnInit {
     this._filtroLista = value;
     this.eventosFiltrados = this.filtroLista ? this.filtrarEventos(this.filtroLista) : this.eventos;
   }
- 
+
   openModal(template: any) {
+    // limpar
     this.registerForm.reset();
     template.show();
   }
 
+  novoEvento(template: any){
+    this.acao  = 'post';
+    this.openModal(template);
+  }
+
+  editarEvento(evento: Evento, template: any){
+    this.acao = 'put';
+    this.openModal(template);
+    this.evento = evento;
+    this.registerForm.patchValue(evento);
+  }
   ngOnInit() {
     this.validation();
     this.getEventos();
@@ -82,17 +95,40 @@ export class EventosComponent implements OnInit {
 
   salvarAlteracao(template: any) {
     if (this.registerForm.valid) {
-      this.evento = Object.assign({}, this.registerForm.value);
-      this.eventoService.postEvento(this.evento).subscribe(
-        (novoEvento: Evento) => {
-          console.log(novoEvento);
-          template.hide();
-          this.getEventos();
-        }, error => {
-          console.log(error);
-        }
-      );
+
+      if (this.acao === 'post') {
+        this.evento = Object.assign({}, this.registerForm.value);
+        this.eventoService.postEvento(this.evento).subscribe(
+          () => {
+            template.hide();
+            this.getEventos();
+          }, error => {
+            console.log(error);
+          }
+        );
+      } else {
+        this.evento = Object.assign({id : this.evento.id}, this.registerForm.value);
+        this.eventoService.putEvento(this.evento).subscribe(
+          () => {
+            template.hide();
+            this.getEventos();
+          }, error => {
+            console.log(error);
+          }
+        );
+      }
     }
+  }
+
+  deletarEvento(evento: Evento) {
+    this.eventoService.deleteEvento(this.evento.id).subscribe(
+      () => {
+        template.hide();
+        this.getEventos();
+      }, error => {
+        console.log(error);
+      }
+    );
   }
 
   getEventos() {

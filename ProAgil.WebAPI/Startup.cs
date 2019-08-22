@@ -16,6 +16,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProAgil.Repository;
+using AutoMapper;
 
 namespace ProAgil.WebAPI
 {
@@ -36,6 +37,7 @@ namespace ProAgil.WebAPI
                 );
                 
             services.AddScoped<IProAgilRepository, ProAgilRepository>();
+            services.AddAutoMapper();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors();
         }
